@@ -1,0 +1,31 @@
+# NOTICE — third-party provenance
+
+This guide analyzes four projects. Their licenses are different, and this
+repository does not relicense their code.
+
+| Project | License | What it means here |
+|---|---|---|
+| AgroVoz | GNU AGPL-3.0 | Code excerpts remain AGPL-3.0. They are not relicensed as MIT. |
+| Wenuke | MIT | Code excerpts remain MIT. |
+| copiloto-recepcion | No license file | All rights reserved. No code is relicensed; cited for analysis only. |
+| ManttoAI | No license file | All rights reserved. No code is relicensed; cited for analysis only. |
+
+The templates in `docs/14-plantillas.md` are original, generic patterns. If a
+snippet is adapted from a source project, the source project's license prevails
+over the MIT license of this repository.
+
+External sources (OWASP, Anthropic, OpenAI, MCP, OpenTelemetry, NIST, etc.) are
+cited, not reproduced. Short quotations remain under their original terms.
+
+The copyright holder for the MIT-licensed code is listed as "The agents-wa
+authors". Replace it with the legal name of the copyright holder before
+publishing if you need a specific attribution.
+
+Verified source licenses on 2026-11-04:
+
+- AgroVoz: `LICENSE` (GNU AGPL-3.0).
+- Wenuke: `LICENSE` (MIT, Copyright (c) 2026 Werken-mapu).
+- copiloto-recepcion: no `LICENSE` in the repository root.
+- ManttoAI: no `LICENSE` in the repository root; the `LICENSE` found under
+  `.agents/skills/frontend-design/` belongs to a third-party skill, not to the
+  project.

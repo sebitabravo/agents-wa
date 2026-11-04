@@ -1,0 +1,87 @@
+Objetivo: Manual estándar ES para crear agentes/chatbots desde 4 repos propios, reusable por la comunidad. Branch: sin git (workspace local agents-wa). Delivery: single local docs set, ask-on-risk. Runner: docs-only structural readback + spot-check de citas path:line (excepción pasiva, sin RED).
+
+## Specs
+- S1: "documentacion completa" de "como se tiene que crear un agente de ia" segun experiencia en otros proyectos.
+- S2: Analizar con cuidado: "~/Developer/AgroVoz", "~/Developer/copiloto-recepcion", "~/Developer/ManttoAI", "~/Developer/Wenuke".
+- S3: Crear "guia para crear agentes, chatbots y esas esas cosas" + "quiero crear una standarizacion de esto".
+- S4: "tambien le puede servir a la comunidad" — espanol neutro/profesional, Markdown en docs/, ejemplos reales con path:line.
+- S5: Calidad: "que te quede perfecto" — verificar patrones afirmados contra codigo, sin inventar.
+- S6: Sin repo git ni decisiones abiertas bloqueantes. Alcance: solo docs, sin codigo ejecutable.
+- S7: Manual completo del ciclo de vida: descubrimiento, diseño, implementación, evaluación, seguridad, observabilidad, costos, despliegue, arquitecturas, casos, plantillas, anti-patrones, comunidad.
+- S8: Análisis profundo de los 4 proyectos con evidencia path:line, incluyendo fracasos, deuda y tradeoffs.
+- S9: Investigación externa 2025-2026 con fuentes citadas: OWASP GenAI LLM Top 10 2026, Anthropic, OpenAI, MCP, OpenTelemetry GenAI, evals, frameworks.
+- S10: Listo para comunidad: plantillas, checklists, glosario, comparativas, referencias, contribución, licencia recomendada.
+- S11: Exactitud: afirmaciones sobre repos verificadas contra código; externas con URL y fecha.
+- S12: Preservar los 6 capítulos existentes, corregir errores y integrarlos. Prosa ES neutra; artefactos técnicos en inglés.
+- S13: Cada cita `path:line` resuelve a un archivo existente, dentro de la longitud del archivo y con el hecho afirmado en las lineas citadas. Un archivo que existe pero no contiene el hecho no es evidencia.
+- S14: Cuando un nombre de archivo existe en mas de un repositorio (`llm.py`, `config.py`, `pytest.ini`, `requirements.txt`, `vercel.json`, `docker-compose.yml`), la cita lleva el prefijo del proyecto.
+- S15: `scripts/check_docs.py` verifica la resolucion de cada cita (archivo y rango), no solo cuantas hay.
+- S16: Las afirmaciones contradichas por el codigo se reescriben para decir lo que el codigo hace; ninguna cita se mueve para "hacerla calzar".
+
+## Tasks
+- T1 [S1,S3,S4] Capítulo 1 Principios fail-closed — completed — docs/01-principios-fail-closed.md (281 líneas)
+- T2 [S2,S3,S4] Capítulo 2 Stack base — completed — docs/02-stack-base.md (308)
+- T3 [S2,S3,S4] Capítulo 3 System prompts — completed — docs/03-system-prompts.md (204)
+- T4 [S2,S3,S4] Capítulo 4 Orquestación y tools — completed — docs/04-orquestacion-tools.md (304)
+- T5 [S2,S4] Capítulo 5 Datos y RAG — completed — docs/05-datos-rag.md (206)
+- T6 [S2,S4] Capítulo 6 Canales y memoria — completed — docs/06-canales-memoria.md (316)
+- T7 [S3,S4,S5] README + cierre previo — completed — reemplazado en T26
+- T8 [S11,S12] Auditoría y corrección de capítulos 1-6 — completed — 6 archivos corregidos; hallazgo: el informe de auditoría se equivocó con el opt-in de alertas de AgroVoz, que sí existe (`b7c3e91a4d28_add_alert_consent.py`, `alert_service.py:96`)
+- T9 [S2,S8] Exploración AgroVoz — completed — handoff: 19 tools, TF-IDF, fail-closed, presupuesto 10 s
+- T10 [S2,S8] Exploración copiloto-recepcion — completed — handoff: tool-first, doble confirmación, SLA 120/180 s
+- T11 [S2,S8] Exploración ManttoAI — completed — handoff: reglas-first single-shot, chat sin ADR, 375 tests declarados
+- T12 [S2,S8] Exploración Wenuke — completed — handoff: reglas+offline, serverless, sin webhook de entrada
+- T13 [S9] Investigación externa — completed — OWASP 2026 (2026-08-04), Anthropic (2024-12-19), OpenAI (2025), MCP (2025-06-18/2025-11-25), OTel GenAI (2026-10), evals, frameworks
+- T14 [S7,S10] Capítulo 0 Introducción — completed — docs/00-introduccion.md (373)
+- T15 [S7,S9] Capítulo 7 Evaluación — completed — docs/07-evaluacion.md (500)
+- T16 [S7,S9] Capítulo 8 Seguridad — completed — docs/08-seguridad.md (550)
+- T17 [S7,S9] Capítulo 9 Observabilidad — completed — docs/09-observabilidad.md (450)
+- T18 [S7,S9] Capítulo 10 Costos — completed — docs/10-costos-modelos.md (499)
+- T19 [S7,S9] Capítulo 11 Despliegue — completed — docs/11-despliegue.md (500)
+- T20 [S7,S9] Capítulo 12 Arquitecturas — completed — docs/12-arquitecturas.md (550)
+- T21 [S8,S10] Capítulo 13 Casos de estudio — completed — docs/13-casos-de-estudio.md (755, 406 citas)
+- T22 [S10] Capítulo 14 Plantillas — completed — docs/14-plantillas.md (696, 16 plantillas)
+- T23 [S8,S10] Capítulo 15 Anti-patrones — completed — docs/15-anti-patrones.md (542, 55 fichas)
+- T24 [S10] Capítulo 16 Comunidad — completed — docs/16-comunidad.md (399)
+- T25 [S9,S10] Apéndices A/B/C — completed — A-glosario.md (336), B-comparativas.md (352), C-referencias.md (315)
+- T26 [S1,S3,S4,S12] README índice maestro — completed — README.md (220), 20 docs enlazados
+- T27 [S5,S11] Verificación final — completed — 20/20 archivos, 8.436 líneas, 0 enlaces rotos, 1.325 citas, 0 rutas absolutas, 0 emojis; spot-checks: 19 tools, MAX_TOOL_PAYLOAD=3500, consentimiento de alertas, sin webhook en Wenuke, licencias verificadas
+- T28 [S5] Mirror Engram — completed — topic `odd/guia-agentes-ia/tasks`
+- T29 [S5,S11] Corrección de los 3 issues del review — completed — (1) "8 validaciones" eliminado de 00:236; (2) rutas por rol con una sola tabla canónica en 00 y punteros en README/16; (3) verificación reproducible con `scripts/check_docs.py` y salida citada en README
+- T30 [S10] Licencia en vigor — completed — `LICENSE`, `LICENSES/CC-BY-SA-4.0.txt`, `LICENSES/MIT.txt`, `NOTICE`; SPDX en 20 docs + README + script; prosa CC BY-SA 4.0, código original MIT, terceros sin relicenciar
+- T31 [S5] Runner de verificación — completed — `scripts/check_docs.py`: estructura, enlaces, citas, rutas absolutas, pendientes, SPDX y licencias; salida actual: 20/20 docs, 8.452 líneas, 1.325 citas, 0 enlaces rotos, 0 rutas absolutas, 0 pendientes, 0 sin SPDX, 4/4 licencias
+- T32 [S11,S13,S16] Auditoría de citas de los 4 repos — completed — 19 verificadores read-only sobre 945 citas resueltas; 921 inspeccionadas; 114 defectos (18 FALSE, 26 RANGE, 70 UNSUPPORTED) en `odd/audit/defectos.md`
+- T33 [S11,S13,S16] Corregir citas de `13-casos-de-estudio.md` — completed — 38 corregidas: 22 UNSUPPORTED, 9 FALSE, 7 RANGE
+- T34 [S11,S13,S16] Corregir citas de `08-seguridad.md` y `00-introduccion.md` — completed — 30 corregidas: 1 FALSE, 6 RANGE, 23 UNSUPPORTED; `events.py` y el rate limit de AgroVoz reescritos
+- T35 [S11,S13,S14,S16] Corregir citas de `02`, `03`, `05`, `07` — completed — 13 corregidas: 2 FALSE, 2 RANGE, 9 UNSUPPORTED; las 5 citas de `llm.py` repuntadas a `Wenuke/backend/llm.py`
+- T36 [S11,S13,S14,S16] Corregir citas de `09`, `11`, `12`, `14`, `15`, `C` — completed — 3 FALSE, 5 RANGE, 3 UNSUPPORTED; formularios de cita `Proyecto ruta` normalizados a `Proyecto/ruta`
+- T37 [S13,S15] Endurecer `scripts/check_docs.py` — completed — resuelve archivo y rango, falla en faltantes/fuera de rango/ambiguas/`.../`, con `--repos-root` y `--no-repo-check` para clones sin los 4 repos
+- T38 [S11,S13] Re-verificación final y actualización de README, ODD doc y memoria — completed — 22 citas sin prefijo repuntadas al repo correcto (README de copiloto, CI de AgroVoz, pruebas de ManttoAI); salida final: 20/20, 8.470 líneas, 1.388 citas, 1.388 resueltas, 0 fuera de rango, 0 ambiguas
+
+## Log
+- L1 (2026-11-04, verbatim usuario): "mira quiero en este proyecto crear una documentacion completa de como se tiene que crear un agente de ia segun la experiencia que e tenido en mis otros proyecto entonces es un trabajo tardio y que te va a tomar tiempo por lo cual dale y levanta mas de 100 agentes y trabaja en stacks de 7 o ve tu como es mas correcto pero es un trabajo pesado y arduo mira consiste en que basicamente. "~/Developer/AgroVoz", "~/Developer/copiloto-recepcion", "~/Developer/ManttoAI", "~/Developer/Wenuke". aqui ties los proyectos para que los analises con cuidado ya que quiero crear una guia para crear agentes, chatbots y esas esas cosas y en estos proyectos yo cree los mios pero quiero crear una standarizacion de esto y tambien le puede servir a la comunidad entonces por eso quiero que investigues porfavor y que te quede perfecto."
+- L2 (sesión previa): routing decidió NO 100 agentes en stacks de 7; un explorer mapeó 4 repos; 6 capítulos con superficies disjuntas; sin git.
+- L3 (sesión previa): batch1 y batch2 OK; README + 1587 líneas; sin tests ejecutables.
+- L4 (2026-11-04, nueva iteración): el usuario reitera el pedido y pide investigación y calidad "perfecta". Decisión: no reiniciar; auditar y expandir la base existente.
+- L5: Routing: 5 exploradores read-only en paralelo (4 proyectos + auditoría). Luego olas de 4-5 writers con superficies disjuntas. Total: 18 agentes (5 explore + 13 writer), no 100: 100 agentes habrían inflado contexto y duplicado citas.
+- L6: Auditoría: cap. 1 y 3 aptos; 2 y 4 correcciones menores; 5 y 6 correcciones mayores. Errores: 19 tools no 17; enum real `ESPERANDO_CONSULTA/CERRADO/DERIVADO`; Wenuke sin opt-in; `odepa_papa.yaml` sin sellos; citas desfasadas.
+- L7: Exploración: AgroVoz = orquestador determinista + LLM acotado; copiloto = tool-first + doble confirmación + SLA; ManttoAI = reglas-first single-shot + chat sin ADR; Wenuke = reglas+offline + serverless + sin webhook de entrada.
+- L8: Investigación externa: OWASP GenAI LLM Top 10 2026 (LLM01 Prompt Injection, LLM02 Sensitive Information Disclosure, LLM03 Excessive Agency, LLM04 Supply Chain, LLM05 Data and Model Poisoning, LLM06 Unbounded Consumption, LLM07 Misinformation, LLM08 Hidden Context Exposure, LLM09 Vector and Embedding Weaknesses, LLM10 Improper Output Handling). Anthropic workflows vs agents. OpenAI single-agent first. MCP tools/resources/prompts. OTel GenAI semconv. Evals capability vs regression, pass^k.
+- L9: Ola 1: 00 (373), 07 (500), 08 (550), 09 (450) + corrección de 6 capítulos. Ola 2: 10 (499), 11 (500), 12 (550), 13 (755). Ola 3: 14 (696), 15 (542), 16 (399), A (336), B (352), C (315).
+- L10: Corrección de citas: `llm_service.py:81-117` → `81-103`; `tools.py:243-319` → `243-336`; "8 validaciones" → "múltiples comprobaciones". Rutas absolutas de 02-stack-base normalizadas a `Proyecto/...`.
+- L11: Verificación final: 20/20 archivos; 8.436 líneas; 0 enlaces rotos; 1.325 citas path:line; 0 rutas absolutas; 0 emojis; 0 marcadores TODO/TBD. Spot-checks: 19 tools, `MAX_TOOL_PAYLOAD=3500`, consentimiento de alertas, Wenuke sin webhook, copiloto 12 s vs 120 s, AgroVoz README vs ADR 34, ManttoAI chat fuera de alcance.
+- L12: README reescrito como índice maestro (220 líneas) con estado v1.0-draft, rutas por rol, tabla de 20 documentos, 10 invariantes, 4 proyectos, estándar de evidencia, verificación y licencia recomendada (no vigente).
+- L13: Límites declarados: no se ejecutaron las suites de los 4 proyectos; las cifras son las declaradas por cada repo. No hay git en agents-wa, así que no hubo commits ni PR. La licencia de la guía está recomendada pero no aprobada.
+- L14: Próximo paso del autor: revisar el manual, decidir licencia (CC BY-SA 4.0 para prosa, MIT/Apache-2.0 para plantillas) y publicar. Opcional: añadir casos de estudio nuevos, traducciones y datasets de eval.
+- L15 (2026-11-04, review del usuario): verificó 20 archivos y la tabla de licencias reales; señaló 3 issues: "8 validaciones" en 00:235, rutas por rol triplicadas y "0 enlaces rotos" sin runner. Indicó el split correcto de licencias y los precedentes (GitHub Docs, Turing Way, Rust book, OWASP CC BY-SA 4.0).
+- L16: Correcciones aplicadas: "8 validaciones" → "valida en servidor fechas, personas, habitación, nombre y confirmación"; tabla canónica de rutas por rol solo en 00, con punteros en README y 16; `scripts/check_docs.py` versionado y salida citada en README.
+- L17: Licencia en vigor: `LICENSE` (split), `LICENSES/CC-BY-SA-4.0.txt` (texto oficial), `LICENSES/MIT.txt`, `NOTICE` (procedencia y carve-outs de AgroVoz AGPL, Wenuke MIT, copiloto/ManttoAI sin licencia). SPDX en 20 docs, README y script; `14-plantillas.md` usa `CC-BY-SA-4.0 AND MIT`.
+- L18: Verificación final post-review: `python3 scripts/check_docs.py` → 20/20 docs, 8.452 líneas en docs, 244 en README, 1.325 citas, 0 enlaces rotos, 0 rutas absolutas, 0 pendientes, 0 archivos sin SPDX, 4/4 licencias. La diferencia con las 8.657 del review viene de quitar la tabla duplicada y añadir cabeceras SPDX; el runner es la fuente de verdad.
+- L19 (2026-11-04, sesión nueva): el usuario reenvía el pedido original completo. No se reinicia el trabajo: se verifica el entregable existente contra su propia promesa. Corte de red durante la auditoría; se retoma con shards más pequeños.
+- L20: Diagnóstico: el runner contaba citas con regex pero nunca las resolvía, así que "1.325 citas" no probaba nada. Un script de resolución encontró 11 citas fuera de la longitud del archivo y 11 a archivos inexistentes. Ese hueco es el defecto de método, no solo de datos.
+- L21: Auditoría semántica: 945 citas resueltas, repartidas en shards de 35-70 y verificadas por 19 exploradores read-only (AgroVoz 278, copiloto 249, Wenuke 250, ManttoAI 168). 921 inspeccionadas, 114 defectos: 18 FALSE, 26 RANGE, 70 UNSUPPORTED. Evidencia consolidada en `odd/audit/defectos.md`; inventarios por repo en `odd/audit/citas-*.json`.
+- L22: Causa raíz dominante: nombres de archivo ambiguos entre repos citados sin prefijo del proyecto, y rangos de línea que quedaron obsoletos. Los FALSE más graves: CI de AgroVoz al 80% cuando el workflow fija 70%; "MySQL, Mosquitto, Mailpit, Redis y Ollama" en el compose de AgroVoz, que solo define `backend`, `openwa` e `ivr`; Wenuke `reglas.py` descrito como dominio puro cuando lee YAML desde disco; y copiloto "nunca guarda texto" cuando `events.py` guarda el `text` de `inbound`.
+- L23: Decisión de corrección (S16): no se mueve una cita para que calce. Si el código contradice la afirmación, se reescribe la frase para decir lo que el código hace; si nada lo respalda, se retira la cita y se declara no verificado.
+- L24: Verificación posterior a las correcciones: `python3 scripts/check_docs.py` → 20/20 documentos, 8.470 líneas en `docs/`, 249 en README, 1.388 citas, 1.388 resueltas, 0 fuera de rango, 0 ambiguas, 0 enlaces rotos, 0 rutas absolutas, 0 pendientes, 0 sin SPDX, 4/4 licencias. Spot-check del padre sobre 9 de las 22 citas repuntadas: repo y contenido correctos.
+- L25: Lo que el runner prueba y lo que no: prueba que cada cita apunta a un archivo y una línea existentes, dentro de la longitud del archivo. No prueba que la línea diga lo que la frase afirma; eso se hizo una vez con lectura semántica de 921 citas y quedó en `odd/audit/defectos.md`.
+- L26: Corrección de método: en el primer pase de resolución, mi mensaje de error imprimía `repo/ruta` para citas SIN prefijo, y lo leí como si el prefijo estuviera en el documento. El mapeo por contenido seguía siendo válido, pero el diagnóstico se rehizo leyendo la cita real de cada línea.

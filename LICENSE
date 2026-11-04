@@ -1,0 +1,19 @@
+# License
+
+This repository uses a split license.
+
+- **Prose, tables, checklists, diagrams and the README** are licensed under
+  **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
+  Full text: [`LICENSES/CC-BY-SA-4.0.txt`](LICENSES/CC-BY-SA-4.0.txt).
+- **Original code templates and scripts** are licensed under the **MIT License**.
+  Full text: [`LICENSES/MIT.txt`](LICENSES/MIT.txt).
+
+SPDX identifiers are declared at the top of each file. Files that mix prose and
+code (for example `docs/14-plantillas.md`) use `CC-BY-SA-4.0 AND MIT`: the
+prose is CC BY-SA 4.0 and the original code blocks are MIT.
+
+Third-party code, quotations and data remain under their original licenses.
+Read [`NOTICE`](NOTICE) before reusing any snippet that cites one of the four
+source projects.
+
+This is a licensing statement, not legal advice.

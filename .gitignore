@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Artefactos intermedios de la auditoría de citas (los consolidados viven en defectos.md)
+odd/audit/chunks/
+odd/audit/citas-*.json
