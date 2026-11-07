@@ -1,0 +1,18 @@
+name: docs
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verificacion de la guia
+        run: python3 scripts/check_docs.py --no-repo-check
+      - name: Tests del runner
+        run: python3 -m pytest -q

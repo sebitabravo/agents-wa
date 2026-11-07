@@ -10,7 +10,8 @@ Run from the repository root:
 
 The last form is for community clones that do not have the four case-study
 repositories next to this one: structure, links and SPDX are still verified,
-and citation resolution is reported as skipped instead of failed.
+and citation resolution is reported as skipped. By default the run is strict:
+a missing case-study repository is a hard failure, not a skip.
 """
 
 from __future__ import annotations
@@ -68,11 +69,7 @@ SPDX = re.compile(r"SPDX-License-Identifier:\s*(.+)")
 ABSOLUTE = re.compile(r"/Users/[^\s`)]+")
 PENDING = re.compile(r"\b(?:TODO|TBD|FIXME|XXX)\b")
 
-# Files the guide cites per case-study section, where the section heading fixes
-# the repository root. Everything else must carry the project prefix.
-SECTION_SCOPED = {"README.md", "DESIGN.md", "AGENTS.md", "CHANGELOG.md"}
-# Not repository evidence: guide-internal paths, URLs and shell-ish fragments.
-SKIP_PREFIXES = ("docs/", "scripts/", "LICENSES/", "odd/", "design/", "http")
+# Directories skipped when indexing the case-study repositories.
 IGNORED_DIRS = {
     ".git",
     "node_modules",
@@ -88,7 +85,11 @@ IGNORED_DIRS = {
 
 
 def build_index(repos_root: Path) -> dict[str, dict[str, Path]]:
-    """Map repository name -> {relative path: absolute path}."""
+    """Map repository name -> {relative path: absolute path}.
+
+    Relative paths are normalized to POSIX separators so the index and the
+    citation text agree on every platform.
+    """
     index: dict[str, dict[str, Path]] = {}
     for name in REPO_DIRS:
         base = repos_root / name
@@ -99,31 +100,44 @@ def build_index(repos_root: Path) -> dict[str, dict[str, Path]]:
             dirnames[:] = [d for d in dirnames if d not in IGNORED_DIRS]
             for filename in filenames:
                 full = Path(dirpath) / filename
-                files[str(full.relative_to(base))] = full
+                files[full.relative_to(base).as_posix()] = full
         index[name] = files
     return index
+
+
+def named_repo(path: str) -> str | None:
+    """Return the repository a cited path explicitly names, or None.
+
+    The first segment names a repository when it matches a directory name or
+    an alias. Anything else (``backend/...``, ``README.md``) leaves the
+    repository to the surrounding section context.
+    """
+    prefix = path.split("/", 1)[0]
+    if prefix in REPO_DIRS or prefix in REPO_ALIASES:
+        return REPO_ALIASES.get(prefix, prefix)
+    return None
 
 
 def resolve(path: str, index: dict[str, dict[str, Path]]) -> list[tuple[str, str]]:
     """Resolve a cited path to (repository, relative path) candidates.
 
-    A leading repository name (or its alias) pins the repository. Without one,
-    the path is searched in every repository: a unique hit is enough, exactly
-    as the guide's evidence convention allows inside a case-study section.
+    A leading repository name (or its alias) pins the resolution to that one
+    repository, and its cited range must fit that repository's file. Without
+    one, the path is searched in every repository: a unique hit is enough,
+    exactly as the guide's evidence convention allows inside a case-study
+    section; more than one hit must be disambiguated with a prefix.
     """
-    prefix = path.split("/", 1)[0]
-    has_prefix = prefix in REPO_DIRS or prefix in REPO_ALIASES
-    target = REPO_ALIASES.get(prefix, prefix)
-    body = path[len(prefix) + 1 :] if "/" in path else path
+    repo = named_repo(path)
+    candidate = path.split("/", 1)[1] if repo and "/" in path else path
     hits: list[tuple[str, str]] = []
     for name, files in index.items():
-        if has_prefix and target != name:
+        if repo and name != repo:
             continue
-        candidate = body if has_prefix else path
-        if candidate in files:
-            hits.append((name, candidate))
+        lookup = candidate if repo else path
+        if lookup in files:
+            hits.append((name, lookup))
             continue
-        suffixes = [rel for rel in files if rel.endswith("/" + candidate)]
+        suffixes = [rel for rel in files if rel.endswith("/" + lookup)]
         if suffixes:
             hits.append((name, sorted(suffixes, key=len)[0]))
     return hits
@@ -142,9 +156,8 @@ def exceeds(path: Path, spec: str) -> int | None:
 
 def check_citations(
     files: list[Path], repos_root: Path, index: dict[str, dict[str, Path]]
-) -> tuple[int, list[str], list[str], list[str], list[str]]:
-    """Return totals and defects for every citation in the guide."""
-    total = 0
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    """Return defects for every citation in the guide."""
     unresolved: list[str] = []
     out_of_range: list[str] = []
     ambiguous: list[str] = []
@@ -155,11 +168,10 @@ def check_citations(
         ):
             for match in CITATION.finditer(line):
                 cited, start, rest = match.group(1), match.group(2), match.group(3)
-                if cited.startswith(SKIP_PREFIXES) is False and cited.startswith("/"):
+                if cited.startswith("/"):
                     continue
                 if cited.startswith("http"):
                     continue
-                total += 1
                 where = f"{path.relative_to(ROOT)}:{lineno}"
                 if ".../" in cited:
                     abbreviated.append(f"{where} -> {cited}")
@@ -168,26 +180,25 @@ def check_citations(
                 if not hits:
                     unresolved.append(f"{where} -> {cited}")
                     continue
-                bare = "/" not in cited
-                if bare and len(hits) > 1 and cited not in SECTION_SCOPED:
+                if named_repo(cited) is None and len(hits) > 1:
+                    # Several repositories hold this path and the citation does
+                    # not name one: report it instead of attributing it to
+                    # whichever candidate happens to fit the cited range.
                     ambiguous.append(
-                        f"{where} -> {cited} ({', '.join(sorted(h[0] for h in hits))})"
+                        f"{where} -> {cited} ({', '.join(sorted({h[0] for h in hits}))})"
                     )
-                # A section-scoped name (README.md, DESIGN.md) is resolved by the
-                # heading of its case study, so the range only has to fit one
-                # candidate; a prefixed path must fit the repository it names.
-                offenders = []
-                for name, rel in hits:
-                    bad = exceeds(index[name][rel], start + rest)
-                    if bad is not None:
-                        offenders.append((name, rel, bad, line_count(index[name][rel])))
-                if offenders and len(offenders) == len(hits):
-                    name, rel, bad, size = offenders[0]
+                    continue
+                # Exactly one candidate, or pinned to the repository the
+                # citation names: the cited range must fit that exact file.
+                name, rel = hits[0]
+                size = line_count(index[name][rel])
+                bad = exceeds(index[name][rel], start + rest)
+                if bad is not None:
                     out_of_range.append(
                         f"{where} -> {name}/{rel}:{start}{rest} (archivo de "
                         f"{size} lineas, se cita {bad})"
                     )
-    return total, unresolved, out_of_range, ambiguous, abbreviated
+    return unresolved, out_of_range, ambiguous, abbreviated
 
 
 def main() -> int:
@@ -241,30 +252,27 @@ def main() -> int:
 
     repos_root = Path(args.repos_root)
     index = build_index(repos_root)
-    repos_present = len(index) == len(REPO_DIRS)
+
+    counts_text = "".join(f.read_text(encoding="utf-8") for f in files) + (
+        ROOT / "README.md"
+    ).read_text(encoding="utf-8")
+    citations = len(CITATION.findall(counts_text))
+
+    missing_repos = [name for name in REPO_DIRS if name not in index]
     if args.no_repo_check:
-        citations, unresolved, out_of_range, ambiguous, abbreviated = (
-            len(CITATION.findall("".join(f.read_text() for f in files))),
-            [],
-            [],
-            [],
-            [],
-        )
+        unresolved, out_of_range, ambiguous, abbreviated = [], [], [], []
         skipped = True
-    elif repos_present:
-        citations, unresolved, out_of_range, ambiguous, abbreviated = check_citations(
-            files, repos_root, index
-        )
-        skipped = False
-    else:
-        citations = len(
-            CITATION.findall(
-                "".join(f.read_text() for f in files)
-                + (ROOT / "README.md").read_text()
-            )
+    elif missing_repos:
+        errors.append(
+            f"Faltan repositorios en {repos_root}: {', '.join(missing_repos)}"
         )
         unresolved, out_of_range, ambiguous, abbreviated = [], [], [], []
         skipped = True
+    else:
+        unresolved, out_of_range, ambiguous, abbreviated = check_citations(
+            files, repos_root, index
+        )
+        skipped = False
 
     if broken:
         errors.append(f"Enlaces internos rotos: {len(set(broken))}")
@@ -291,6 +299,10 @@ def main() -> int:
     readme_lines = len((ROOT / "README.md").read_text(encoding="utf-8").splitlines())
 
     print("== agents-wa docs check ==")
+    if args.no_repo_check:
+        print("Modo: solo estructura (--no-repo-check)")
+    else:
+        print("Modo: citas verificadas")
     print(f"Documentos: {len(files)}/{len(EXPECTED_DOCS)}")
     print(f"Lineas en docs/: {total_lines}")
     print(f"Lineas en README.md: {readme_lines}")
@@ -306,7 +318,9 @@ def main() -> int:
     if skipped:
         print("Resolucion de citas: omitida (repos no disponibles)")
     else:
-        print(f"Citas resueltas: {citations - len(unresolved)}/{citations}")
+        resolved = citations - len(unresolved) - len(abbreviated)
+        print(f"Citas resueltas: {resolved}/{citations}")
+        print(f"Citas abreviadas: {len(abbreviated)}")
         print(f"Citas fuera de rango: {len(out_of_range)}")
         print(f"Citas ambiguas sin prefijo: {len(ambiguous)}")
 

@@ -528,16 +528,3 @@ Continúa con:
 - [Capítulo 14 — Plantillas](14-plantillas.md): las estructuras copiables para prompts, tools,
   evals y runbooks.
 
-## Key Learnings
-
-1. **El contrato alrededor del modelo es el producto.** Canal, schema, validación, frescura,
-   permisos y observabilidad deciden la confiabilidad; el modelo solo redacta.
-2. **Los anti-patrones más caros se ven como atajos.** `BackgroundTasks` como cola, estado en
-   memoria, historial persistido como memoria y tool definitions sin runtime funcionan en
-   demo y fallan cuando hay un usuario real.
-3. **La autorización no se delega al modelo.** Confirmaciones, permisos y datos se verifican
-   en el servidor contra el texto del usuario y las reglas del dominio.
-4. **La evidencia cambia la conversación.** Un `path:line`, una métrica o un caso de eval
-   convierten "creo que falla" en un arreglo priorizable.
-5. **Priorizar es impacto × probabilidad, no novedad.** Primero se cierra lo que puede causar
-   daño irreversible; después se paga la deuda que impide escalar.

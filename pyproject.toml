@@ -1,0 +1,6 @@
+[project]
+name = "agents-wa"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

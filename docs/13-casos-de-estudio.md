@@ -747,10 +747,3 @@ Continúa con:
 - [Capítulo 14 — Plantillas](14-plantillas.md): las estructuras copiables para prompts, tools, evals y runbooks.
 - [Capítulo 12 — Arquitecturas](12-arquitecturas.md): cuándo un workflow basta y cuándo hace falta un agente con loop.
 
-## Key Learnings
-
-1. **Los cuatro proyectos son workflows con LLM acotado, no agentes autónomos.** La complejidad real está en el canal, las tools y los datos; ninguno necesita multi-agente para lo que hace.
-2. **El fallo más caro no es técnico, es de promesa.** Wenuke vende conversación sin recepción por WhatsApp verificada en código; ManttoAI agrega un chat fuera de alcance; AgroVoz describe dos deploys distintos. La documentación es parte del producto y también se testea.
-3. **La mejor defensa es la separación de responsabilidades.** copiloto demuestra que el consentimiento, la validación y el resumen autoritativo deben vivir en el servidor; el modelo solo redacta.
-4. **Los tests no son evals.** ManttoAI tiene cientos de tests y ninguna medición de calidad de respuesta; copiloto tiene 12 conversaciones y encontró cuatro defectos concretos.
-5. **La procedencia y la frescura son features, no metadata.** AgroVoz es la mejor referencia: fuente, fecha, URL y `review_before` en la respuesta, con fallo cerrado cuando el dato venció.
