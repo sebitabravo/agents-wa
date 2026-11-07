@@ -54,16 +54,18 @@ El orden de lectura no es el orden de los archivos: primero el canal y el fallba
 
 Los invariantes no dependen de FastAPI, de Python ni de Chile. Si cambias el lenguaje, el proveedor del modelo o el canal, estos controles siguen siendo exigibles.
 
+La lista canónica de los 10 invariantes, con evidencia en los cuatro proyectos y capítulo dueño de cada uno, está en el [Capítulo 0](00-introduccion.md#los-10-invariantes-del-estándar). Esta tabla no la redeclara: recoge los controles que sobreviven a un cambio de stack.
+
 | Invariante | Qué significa en cualquier stack | Cómo se verifica |
 |---|---|---|
 | **Fail-closed** | Sin dato verificado no hay respuesta con datos; hay un fallback constante. | Un test que fuerza el fallo y compara el texto exacto. |
 | **Validación en servidor** | Fechas, permisos, montos y cupos se validan en código, no en el prompt. | Un test por regla, con un payload inválido que debe ser rechazado. |
 | **Whitelist de tools** | El modelo solo puede invocar tools declaradas y habilitadas. | Una tool fuera de la lista devuelve un error controlado. |
 | **Frescura y procedencia** | Cada dato declara fuente, fecha y vigencia. | Un dato vencido no aparece en la respuesta ni en el retrieval. |
-| **Memoria acotada** | Historial y contexto tienen tope, TTL y consentimiento. | El turno N+1 no crece sin límite ni persiste sin opt-in. |
+| **Memoria como presupuesto** | Historial y contexto tienen tope, TTL y consentimiento. | El turno N+1 no crece sin límite ni persiste sin opt-in. |
 | **Fallback observable** | La respuesta degradada se marca, se registra y se mide. | El flag y la métrica aparecen en el log y en el dashboard. |
 | **Confirmación humana** | Toda escritura irreversible se confirma en un turno distinto. | Un test de doble confirmación y otro de rechazo. |
-| **Evals como regresión** | Cada incidente se convierte en un caso reproducible. | El caso falla antes del fix y pasa después. |
+| **Evals y regresión** | Cada incidente se convierte en un caso reproducible. | El caso falla antes del fix y pasa después. |
 | **Límites honestos** | Lo no probado se declara como no probado. | El README y el capítulo listan lo que falta, con fecha. |
 
 ### Lo que sí es específico
@@ -165,6 +167,8 @@ El proceso tiene cinco etapas. Cada una tiene un criterio de salida; sin ese cri
 | Opinión del autor | La etiqueta **recomendación de esta guía**. | Se presenta como hecho o como norma. |
 | Afirmación legal | Ley, artículo y fecha, más el aviso de que no es asesoría legal. | Generaliza a otra jurisdicción sin fuente. |
 
+Cada cita `path:line` es relativa al commit del proyecto registrado en [`SOURCES.md`](../SOURCES.md); fijar esos commits es una tarea pendiente de esta edición, y así se declara cuando no lo está.
+
 ### Estilo
 
 - Español neutro y profesional, segunda persona singular, presente.
@@ -225,7 +229,7 @@ Un capítulo está terminado cuando cumple estos criterios. No es una lista de d
 
 El precedente de la prosa es OWASP: el **OWASP GenAI LLM Top 10 2026** se publica bajo **CC BY-SA 4.0** (https://genai.owasp.org/llm-top-10/, publicado 2026-08-04, consultado 2026-11-04). Ese precedente no obliga a nadie, pero muestra que una referencia técnica abierta puede usar share-alike sin perder adopción.
 
-La licencia está en vigor desde el 2026-11-04. El repositorio incluye `LICENSE`, `LICENSES/CC-BY-SA-4.0.txt`, `LICENSES/MIT.txt` y `NOTICE`; cada archivo declara su identificador SPDX. La prosa, las tablas y los checklists son CC BY-SA 4.0; el código original de las plantillas y los scripts es MIT. Los fragmentos citados de los cuatro proyectos no se relicencian: conservan su licencia original y se detallan en `NOTICE`.
+La licencia está en vigor desde el 2026-11-04. El repositorio incluye `LICENSE`, `LICENSES/CC-BY-SA-4.0.txt`, `LICENSES/MIT.txt` y `NOTICE`; los documentos de `docs/` y el README declaran su identificador SPDX, y los textos de licencia se rigen por su propio contenido. La prosa, las tablas y los checklists son CC BY-SA 4.0; el código original de las plantillas y los scripts es MIT. Los fragmentos citados de los cuatro proyectos no se relicencian: conservan su licencia original y se detallan en `NOTICE`.
 
 ### Licencias reales de los cuatro proyectos
 
@@ -383,11 +387,3 @@ Continúa con:
 - [Capítulo 14 — Plantillas](14-plantillas.md): las estructuras copiables para prompts, tools, evals y runbooks.
 - [Capítulo 15 — Anti-patrones](15-anti-patrones.md): el catálogo de fallos recurrentes y sus antídotos.
 - [Apéndice C — Referencias](C-referencias.md): las fuentes externas con URL, fecha y licencia.
-
-## Key Learnings
-
-1. **Un estándar abierto se define por su evidencia y su proceso, no por su tono.** La guía vale porque se puede citar, discutir y corregir con `path:line` o una URL fechada.
-2. **Los invariantes viajan; el stack no.** FastAPI, Python y Chile son el corpus, no la regla. Fail-closed, validación en servidor y frescura se pueden implementar en cualquier lenguaje y país.
-3. **Las licencias de los cuatro proyectos son dispares.** AgroVoz es AGPL-3.0, Wenuke es MIT, y copiloto-recepción y ManttoAI no declaran licencia de proyecto. Copiar código sin verificar es un riesgo legal, no un atajo.
-4. **Una guía sin versión no se puede citar.** SemVer, `last_reviewed`, `valid_until` y un changelog convierten un documento en una referencia estable.
-5. **La contribución se prueba con evidencia, no con entusiasmo.** Un caso sin fallos, un benchmark sin método o una corrección sin fuente no mejoran el manual: lo degradan.

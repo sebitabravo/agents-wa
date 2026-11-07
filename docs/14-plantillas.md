@@ -691,12 +691,3 @@ Cuatro artefactos se versionan por separado: código, prompt, modelo y esquema. 
 
 Si un criterio no se puede verificar con un enlace, un test o una traza, no está cumplido. La lista completa de controles vive en los capítulos [7](07-evaluacion.md), [8](08-seguridad.md), [9](09-observabilidad.md) y [11](11-despliegue.md).
 
----
-
-## Key Learnings
-
-1. Un proyecto de agente se ordena separando `tests/` (contratos) de `evals/` (calidad); mezclarlos produce suites verdes sin señal.
-2. Los placeholders deben sobrevivir hasta el final: un `grep` de `{FALLBACK_TEXT}` encuentra toda frase de degradación que falta definir.
-3. La tool de escritura se distingue de la de lectura por cuatro campos, no por el prompt: confirmación, idempotencia, timeout y auditoría.
-4. El loop se acota con cuatro límites independientes: deadline del turno, `MAX_STEPS`, whitelist y truncado de salida.
-5. Un agente está terminado cuando sus diez criterios se verifican con un enlace, un test o una traza, no cuando el equipo lo declara listo.

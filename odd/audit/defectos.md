@@ -4,6 +4,8 @@
 Método: 19 verificadores read-only (uno por shard de 35–70 citas) sobre 945 citas resueltas.
 Cobertura: 921 citas inspeccionadas. Defectos: 18 `FALSE`, 26 `RANGE`, 70 `UNSUPPORTED`.
 
+> **Estado:** este registro es una instantánea **pre-corrección** de la auditoría del 2026-11-04; conserva los veredictos originales. Las correcciones citadas en la columna "Corrección" se aplicaron sobre los capítulos después, y su verificación fue por muestreo: 9 de las 22 citas repuntadas, confirmadas contra el repo correspondiente. La cobertura semántica fue de 921 citas sobre 1.388 resueltas (66%). Los números de este archivo no se reescriben con las correcciones.
+
 - `FALSE`: el código contradice la afirmación.
 - `RANGE`: la afirmación es cierta pero la línea citada no la contiene (rango obsoleto o demasiado ancho).
 - `UNSUPPORTED`: el archivo existe, pero la línea citada no prueba la afirmación.

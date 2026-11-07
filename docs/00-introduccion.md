@@ -244,6 +244,8 @@ Un invariante es una regla que se cumple en todos los niveles y no se negocia po
 
 Si un proyecto falla un invariante, no está listo para el nivel siguiente. Los capítulos 1-11 explican cómo implementar cada uno; el [Capítulo 15](15-anti-patrones.md) muestra qué pasa cuando se omiten.
 
+> **Nota:** esta tabla es el índice canónico de los invariantes: la columna *Capítulo dueño* es la referencia de dónde se implementa cada uno. Los demás capítulos —incluido el README y el Capítulo 16— refieren a esta tabla por su nombre exacto en lugar de redeclarar la lista.
+
 ### Cómo se conectan los invariantes
 
 No son diez reglas sueltas; tienen un orden de dependencia:

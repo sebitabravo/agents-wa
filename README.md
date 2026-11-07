@@ -3,8 +3,8 @@
 
 Manual en español para diseñar, construir, evaluar y operar agentes y chatbots con LLM. No es una recopilación de teoría: es una destilación de decisiones reales tomadas en cuatro proyectos del autor, con evidencia `path:line` y fuentes externas fechadas.
 
-**Estado:** v1.0 · 2026-11-04 · 20 documentos · 8.470 líneas en `docs/` según `scripts/check_docs.py`.
-**Base empírica:** cuatro proyectos del autor —AgroVoz, copiloto-recepcion, ManttoAI y Wenuke—. Sus repositorios no forman parte de este repositorio: las citas `path:line` de los capítulos apuntan a su código, y `scripts/check_docs.py` verifica esas citas cuando los repos están presentes.
+**Estado:** versión `0.1.0-draft` (leída de [`VERSION`](VERSION)) · sin release etiquetado todavía · edición del 2026-11-04 · 20 documentos · 8.470 líneas en `docs/` según `scripts/check_docs.py`.
+**Base empírica:** cuatro proyectos del autor —AgroVoz, copiloto-recepcion, ManttoAI y Wenuke—. Sus repositorios no forman parte de este repositorio: las citas `path:line` de los capítulos apuntan a su código, y `scripts/check_docs.py` verifica esas citas cuando los repos están presentes. Qué repositorio y qué commit respalda cada cita se registra en [`SOURCES.md`](SOURCES.md); fijar los commits es una tarea pendiente de esta edición.
 **Idioma:** prosa en español neutro/profesional; código, identificadores y artefactos técnicos en inglés.
 **Licencia:** prosa CC BY-SA 4.0; código original de plantillas y scripts MIT. Ver [LICENSE](LICENSE), [LICENSES/](LICENSES/) y [NOTICE](NOTICE).
 
@@ -158,32 +158,44 @@ Convención de rutas: cuando el capítulo nombra el proyecto, `backend/...` es r
 El manual se verifica con un runner versionado, no con una afirmación manual:
 
 ```bash
-python3 scripts/check_docs.py
+python scripts/check_docs.py                    # modo completo: exige los cuatro repos
+python scripts/check_docs.py --no-repo-check    # solo estructura (lo que corre CI)
 ```
 
-El runner comprueba estructura, enlaces internos, rutas absolutas, marcadores pendientes, cabeceras SPDX, presencia de los archivos de licencia y, desde la revisión de citas de esta edición, **resuelve cada cita `path:line`**: falla si el archivo no existe, si el rango supera la longitud del archivo o si un nombre de archivo ambiguo se cita sin prefijo de proyecto. Cuando los cuatro repos no están presentes —el caso de quien clona solo la guía— la resolución se informa como omitida en lugar de fallar, y puedes fijar su ubicación con `--repos-root` o `AGENTS_WA_REPOS_ROOT`.
+El runner comprueba estructura, enlaces internos, rutas absolutas, marcadores pendientes, cabeceras SPDX,
+presencia de los archivos de licencia y **resuelve cada cita `path:line`**. En modo completo, si falta
+alguno de los cuatro repositorios el runner **falla** (exit 1) en vez de omitir la verificación;
+`--no-repo-check` mantiene la corrida estructural y lo declara en la salida. Una cita con prefijo de
+proyecto debe caber en el repositorio que nombra; un nombre sin prefijo que resuelve en más de un
+repositorio se reporta como ambiguo; las citas abreviadas (`.../`) se cuentan aparte y no como resueltas.
+Los commits de referencia de cada proyecto están en [SOURCES.md](SOURCES.md), y la ubicación de los repos
+se fija con `--repos-root` o `AGENTS_WA_REPOS_ROOT`.
 
-Salida esperada al cierre de esta edición:
+Salida de la corrida estructural (la que ejecuta CI, sin los cuatro repos presentes):
 
 ```text
 == agents-wa docs check ==
+Modo: solo estructura (--no-repo-check)
 Documentos: 20/20
-Lineas en docs/: 8470
-Lineas en README.md: 249
+Lineas en docs/: 8439
+Lineas en README.md: 250
 Citas path:line: 1388
 Enlaces rotos: 0
 Rutas absolutas: 0
 Marcadores pendientes: 0
 Archivos sin SPDX: 0
 Archivos de licencia: 4/4
-Citas resueltas: 1388/1388
-Citas fuera de rango: 0
-Citas ambiguas sin prefijo: 0
+Resolucion de citas: omitida (repos no disponibles)
 
-OK: estructura, enlaces, citas, rutas, SPDX y licencias.
+OK: estructura, enlaces, rutas, SPDX y licencias.
+Sin verificar: resolucion de citas (faltan los casos de estudio).
 ```
 
-La verificación es estructural y de resolución, no una corrida de los cuatro proyectos: prueba que cada cita apunta a un archivo y una línea existentes, no que la línea diga lo que la frase afirma. Esa segunda comprobación se hizo una vez, con lectura semántica de 921 citas, y su resultado quedó registrado en `odd/audit/defectos.md`. Las suites de los cuatro repos no se ejecutaron; las cifras de tests y cobertura son las que cada proyecto declara. Donde un proyecto declara cifras contradictorias, la guía muestra la discrepancia en vez de elegir una.
+En modo completo (`python scripts/check_docs.py` con los cuatro repos) la misma corrida agrega
+`Modo: citas verificadas` y las líneas `Citas resueltas`, `Citas abreviadas`, `Citas fuera de rango` y
+`Citas ambiguas sin prefijo`.
+
+La verificación es estructural y de resolución, no una corrida de los cuatro proyectos: prueba que cada cita apunta a un archivo y una línea existentes, no que la línea diga lo que la frase afirma. Esa segunda comprobación se hizo una vez, con lectura semántica de 921 de las 1.388 citas resueltas —cobertura semántica 921/1388 (66%)—; encontró 114 defectos (18 FALSE, 26 RANGE, 70 UNSUPPORTED), registrados, corregidos y verificados por muestreo (9 de 22) en [`odd/audit/defectos.md`](odd/audit/defectos.md). Las suites de los cuatro repos no se ejecutaron; las cifras de tests y cobertura son las que cada proyecto declara. Donde un proyecto declara cifras contradictorias, la guía muestra la discrepancia en vez de elegir una.
 
 ---
 
@@ -211,7 +223,7 @@ La licencia está en vigor desde el 2026-11-04 y es un split explícito:
 | Prosa, tablas, checklists y diagramas | **CC BY-SA 4.0** | [`LICENSES/CC-BY-SA-4.0.txt`](LICENSES/CC-BY-SA-4.0.txt) |
 | Código original de plantillas y scripts | **MIT** | [`LICENSES/MIT.txt`](LICENSES/MIT.txt) |
 
-Cada archivo declara su identificador SPDX. Los archivos que mezclan prosa y código, como `docs/14-plantillas.md`, usan `CC-BY-SA-4.0 AND MIT`: el texto es CC BY-SA 4.0 y los bloques de código originales son MIT.
+Los documentos de `docs/` y este README declaran su identificador SPDX; los textos de licencia se rigen por su propio contenido. Los archivos que mezclan prosa y código, como `docs/14-plantillas.md`, usan `CC-BY-SA-4.0 AND MIT`: el texto es CC BY-SA 4.0 y los bloques de código originales son MIT.
 
 Los fragmentos citados de los cuatro proyectos **no se relicencian**: AgroVoz sigue bajo AGPL-3.0, Wenuke bajo MIT, y copiloto-recepcion y ManttoAI no tienen licencia de proyecto, por lo que conservan todos los derechos. Antes de reutilizar cualquier snippet, lee [`NOTICE`](NOTICE).
 
@@ -224,6 +236,7 @@ Esta es una declaración de licencia, no asesoría legal.
 La guía está pensada para adaptarse. Los invariantes viajan; el stack, el canal y el país son decisiones locales.
 
 - Contribución, versionado y estándar de evidencia: [Capítulo 16](docs/16-comunidad.md).
+- Cómo proponer un cambio: [`CONTRIBUTING.md`](CONTRIBUTING.md). Reportar en privado un problema de seguridad o de evidencia sensible: [`SECURITY.md`](SECURITY.md). Historial de la edición: [`CHANGELOG.md`](CHANGELOG.md).
 - Precedente de la prosa: **OWASP GenAI LLM Top 10 2026**, publicado bajo CC BY-SA 4.0 (https://genai.owasp.org/llm-top-10/, 2026-08-04).
 - Para máxima adopción sin share-alike, la alternativa es CC BY 4.0; para código con patentes, Apache-2.0. No son la licencia actual.
 
